@@ -1,70 +1,54 @@
 ﻿#include <SFML/Graphics.hpp>
-#include <iostream>
+#include <cmath>
 
 using namespace sf;
 
-const int cellSize = 50;
 const int gridSize = 10;
+const int windowSize = 600;
+const int cellSize = windowSize / gridSize;
 
 int main()
 {
-    RenderWindow window(VideoMode(500, 500), "Grid Pattern");
+    RenderWindow window(VideoMode(windowSize, windowSize), "Practice 6");
 
-    RectangleShape cells[gridSize][gridSize];
-
-    for (int i = 0; i < gridSize; i++)
-    {
-        for (int j = 0; j < gridSize; j++)
-        {
-            cells[i][j].setSize(Vector2f(cellSize, cellSize));
-            cells[i][j].setPosition(j * cellSize, i * cellSize);
-            cells[i][j].setOutlineColor(Color::Black);
-            cells[i][j].setOutlineThickness(1);
-
-            if (i == 4)
-            {
-                cells[i][j].setFillColor(Color::Green);
-            }
-            else if (i == 5 && j >= 1 && j <= 8)
-            {
-                cells[i][j].setFillColor(Color::Green);
-            }
-            else if (i == 6 && j >= 2 && j <= 7)
-            {
-                cells[i][j].setFillColor(Color::Green);
-            }
-            else if (i == 7 && j >= 3 && j <= 6)
-            {
-                cells[i][j].setFillColor(Color::Green);
-            }
-            else if (i == 8 && j >= 4 && j <= 5)
-            {
-                cells[i][j].setFillColor(Color::Green);
-            }
-            else
-            {
-                cells[i][j].setFillColor(Color::White);
-            }
-        }
-    }
+    RectangleShape cell(Vector2f(cellSize, cellSize));
+    cell.setOutlineColor(Color::Black);
+    cell.setOutlineThickness(1);
 
     while (window.isOpen())
     {
         Event event;
         while (window.pollEvent(event))
-        {
             if (event.type == Event::Closed)
                 window.close();
-        }
 
         window.clear(Color::White);
-        for (int i = 0; i < gridSize; i++)
-        {
-            for (int j = 0; j < gridSize; j++)
-            {
-                window.draw(cells[i][j]);
+
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridSize; j++) {
+                cell.setPosition(j * cellSize, i * cellSize);
+
+                int startRow = gridSize / 2 - 1;
+                int height = gridSize - startRow;
+
+                if (i >= startRow) {
+                    int level = i - startRow;
+                    int left = level;
+                    int right = gridSize - level - 1;
+
+                    if (j >= left && j <= right)
+                        cell.setFillColor(Color::Green);
+                    else
+                        cell.setFillColor(Color::White);
+                }
+                else {
+                    cell.setFillColor(Color::White);
+                }
+
+                window.draw(cell);
             }
         }
+
         window.display();
     }
 
