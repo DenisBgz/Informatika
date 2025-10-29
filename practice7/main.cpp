@@ -1,72 +1,67 @@
 ﻿#include <iostream>
+#include <set>
 
-void calculateSum(const int* arr, int size, int& sum) {
-    sum = 0;
-    for (int i = 0; i < size; i++) {
-        sum += arr[i];
+int calculateSum(const std::set<int>& s) {
+    int sum = 0;
+    for (int val : s) {
+        sum += val;
     }
+    return sum;
 }
 
-void findArrayWithMinSum(const int* arrA, int sizeA, const int* arrB, int sizeB) {
-    int sumA = 0, sumB = 0;
-    calculateSum(arrA, sizeA, sumA);
-    calculateSum(arrB, sizeB, sumB);
+void findSetWithMinSum(const std::set<int>& setA, const std::set<int>& setB) {
+    int sumA = calculateSum(setA);
+    int sumB = calculateSum(setB);
 
     if (sumA < sumB) {
-        std::cout << "Массив A имеет наименьшую сумму: " << sumA << std::endl;
-        std::cout << "Элементы массива A: ";
-        for (int i = 0; i < sizeA; i++) std::cout << arrA[i] << " ";
+        std::cout << "Множество A имеет наименьшую сумму: " << sumA << std::endl;
+        std::cout << "Элементы множества A: ";
+        for (int val : setA) std::cout << val << " ";
     }
     else {
-        std::cout << "Массив B имеет наименьшую сумму: " << sumB << std::endl;
-        std::cout << "Элементы массива B: ";
-        for (int i = 0; i < sizeB; i++) std::cout << arrB[i] << " ";
+        std::cout << "Множество B имеет наименьшую сумму: " << sumB << std::endl;
+        std::cout << "Элементы множества B: ";
+        for (int val : setB) std::cout << val << " ";
     }
     std::cout << std::endl;
 }
 
-int findMinInUnion(const int* arrA, int sizeA, const int* arrB, int sizeB) {
-    int minVal = arrA[0];
+int findMinInUnion(const std::set<int>& setA, const std::set<int>& setB) {
+    std::set<int> unionSet = setA;
+    unionSet.insert(setB.begin(), setB.end());
 
-    for (int i = 1; i < sizeA; i++) {
-        if (arrA[i] < minVal) minVal = arrA[i];
-    }
-
-    for (int i = 0; i < sizeB; i++) {
-        if (arrB[i] < minVal) minVal = arrB[i];
-    }
-
-    return minVal;
+    return *unionSet.begin();
 }
 
 int main() {
     setlocale(LC_ALL, "ru");
 
     int sizeA, sizeB;
-
-    std::cout << "Введите размер массива A: ";
+    std::cout << "Введите размер множества A: ";
     std::cin >> sizeA;
-    std::cout << "Введите размер массива B: ";
+    std::cout << "Введите размер множества B: ";
     std::cin >> sizeB;
 
-    int* A = new int[sizeA];
-    int* B = new int[sizeB];
+    std::set<int> setA, setB;
+    int value;
 
-    std::cout << "Введите " << sizeA << " элементов для массива A:" << std::endl;
-    for (int i = 0; i < sizeA; i++) std::cin >> A[i];
+    std::cout << "Введите " << sizeA << " элементов для множества A:" << std::endl;
+    for (int i = 0; i < sizeA; i++) {
+        std::cin >> value;
+        setA.insert(value);
+    }
 
-    std::cout << "Введите " << sizeB << " элементов для массива B:" << std::endl;
-    for (int i = 0; i < sizeB; i++) std::cin >> B[i];
+    std::cout << "Введите " << sizeB << " элементов для множества B:" << std::endl;
+    for (int i = 0; i < sizeB; i++) {
+        std::cin >> value;
+        setB.insert(value);
+    }
 
-    findArrayWithMinSum(A, sizeA, B, sizeB);
+    findSetWithMinSum(setA, setB);
 
-    int minUnion = findMinInUnion(A, sizeA, B, sizeB);
+    int minUnion = findMinInUnion(setA, setB);
     std::cout << "Наименьший элемент из объединения множеств A и B: " << minUnion << std::endl;
 
-    delete[] A;
-    delete[] B;
-
     system("pause");
-
     return 0;
 }
